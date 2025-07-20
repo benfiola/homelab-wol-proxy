@@ -1,0 +1,43 @@
+version: 2
+
+snapshot:
+  version_template: "{{ .Version }}+SNAPSHOT-{{.ShortCommit}}"
+
+before:
+  hooks:
+    - echo "{{ .Version }}" > pkg/version.txt
+
+builds:
+  - binary: wolproxy
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    main: ./cmd/wolproxy
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+dockers:
+  - build_flag_templates:
+      - "--pull"
+      - "--platform=linux/amd64"
+    dockerfile: .goreleaser.Dockerfile
+    image_templates:
+      - "benfiola/homelab-wol-proxy:{{ .Version }}-amd64"
+    use: buildx
+  - build_flag_templates:
+      - "--pull"
+      - "--platform=linux/arm64"
+    dockerfile: .goreleaser.Dockerfile
+    image_templates:
+      - "benfiola/homelab-wol-proxy:{{ .Version }}-arm64"
+    use: buildx
+
+docker_manifests:
+  - image_templates:
+    - "benfiola/homelab-wol-proxy:{{ .Version }}-amd64"
+    - "benfiola/homelab-wol-proxy:{{ .Version }}-arm64"
+    name_template: "benfiola/homelab-wol-proxy:{{ .Version }}"
+

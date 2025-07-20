@@ -1,0 +1,31 @@
+{
+    "image": "ubuntu:latest",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "esbenp.prettier-vscode",
+                "golang.golang",
+                "rohit-gohri.format-code-actions"
+            ],
+            "settings": {
+                "[golang]": {
+                    "editor.defaultFormatter": "golang.golang"
+                },
+                "editor.codeActionsOnSave": [
+                    "source.organizeImports",
+                    "source.formatDocument"
+                ],
+                "editor.defaultFormatter": "esbenp.prettier-vscode"
+            }
+        }
+    },
+    "features": {
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+        "ghcr.io/devcontainers/features/go:1.0.0": {
+            "version": "1.24"
+        }
+    },
+    "remoteEnv": {
+        "PATH": "/workspaces/homelab-wol-proxy/.bin:${containerEnv:PATH}"
+    }
+}
